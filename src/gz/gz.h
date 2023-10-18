@@ -178,13 +178,10 @@ struct gz
   z64_controller_t      z_input_mask;
   _Bool                 vcont_enabled[4];
   z64_input_t           vcont_input[4];
+  int32_t               vi_counter;
   int32_t               frame_counter;
   int32_t               lag_vi_offset;
-  int64_t               cpu_counter;
-  int32_t               cpu_counter_freq;
-  _Bool                 timer_active;
-  int64_t               timer_counter_offset;
-  int64_t               timer_counter_prev;
+  int32_t               timer_vi_offset;
   enum col_view_state   col_view_state;
   enum hit_view_state   hit_view_state;
   enum cull_view_state  cull_view_state;

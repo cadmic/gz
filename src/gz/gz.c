@@ -22,24 +22,22 @@
 #include "z64.h"
 #include "zu.h"
 
+#define NTSC_FIELD_RATE 59.94f
+
 __attribute__((section(".data")))
 struct gz gz =
 {
   .ready = 0,
 };
 
-static void update_cpu_counter(void)
+static void update_vi_counter(void)
 {
-  static uint32_t count = 0;
-  uint32_t new_count = clock_ticks();
-  gz.cpu_counter_freq = clock_freq();
-  gz.cpu_counter += new_count - count;
-  count = new_count;
+  gz.vi_counter = (int32_t)__osViIntrCount;
 }
 
 static void main_hook(void)
 {
-  update_cpu_counter();
+  update_vi_counter();
   input_update();
   gfx_mode_init();
 
@@ -354,40 +352,36 @@ static void main_hook(void)
 
   /* execute and draw lag counter */
   if (settings->bits.lag_counter) {
-    int32_t lag_frames = (int32_t)__osViIntrCount +
-                         gz.lag_vi_offset - gz.frame_counter;
+    int32_t lag_frames = gz.vi_counter + gz.lag_vi_offset - gz.frame_counter;
     int x = settings->lag_counter_x - cw * 8;
     gfx_mode_set(GFX_MODE_COLOR, GPACK_RGBA8888(0xC0, 0xC0, 0xC0, alpha));
     if (settings->bits.lag_unit == SETTINGS_LAG_FRAMES)
       gfx_printf(font, x , settings->lag_counter_y, "%8d", lag_frames);
     else if (settings->bits.lag_unit == SETTINGS_LAG_SECONDS)
-      gfx_printf(font, x, settings->lag_counter_y, "%8.2f", lag_frames / 60.f);
+      gfx_printf(font, x, settings->lag_counter_y, "%8.2f", lag_frames / NTSC_FIELD_RATE);
   }
   gz.frame_counter += z64_file.gameinfo->update_rate;
 
   /* execute and draw timer */
-  if (!gz.timer_active)
-    gz.timer_counter_offset -= gz.cpu_counter - gz.timer_counter_prev;
-  gz.timer_counter_prev = gz.cpu_counter;
   if (settings->bits.timer) {
-    int64_t count = gz.cpu_counter + gz.timer_counter_offset;
-    int tenths = count * 10 / gz.cpu_counter_freq;
-    int seconds = tenths / 10;
+    int32_t vis = gz.vi_counter + gz.timer_vi_offset;
+    int hundredths = (int)lroundf(vis * 100 / NTSC_FIELD_RATE);
+    int seconds = hundredths / 100;
     int minutes = seconds / 60;
     int hours = minutes / 60;
-    tenths %= 10;
+    hundredths %= 100;
     seconds %= 60;
     minutes %= 60;
     int x = settings->timer_x;
     int y = settings->timer_y;
     gfx_mode_set(GFX_MODE_COLOR, GPACK_RGBA8888(0xC0, 0xC0, 0xC0, alpha));
     if (hours > 0)
-      gfx_printf(font, x, y, "%d:%02d:%02d.%d",
-                 hours, minutes, seconds, tenths);
+      gfx_printf(font, x, y, "%d:%02d:%02d.%02d",
+                 hours, minutes, seconds, hundredths);
     else if (minutes > 0)
-      gfx_printf(font, x, y, "%d:%02d.%d", minutes, seconds, tenths);
+      gfx_printf(font, x, y, "%d:%02d.%02d", minutes, seconds, hundredths);
     else
-      gfx_printf(font, x, y, "%d.%d", seconds, tenths);
+      gfx_printf(font, x, y, "%d.%02d", seconds, hundredths);
   }
 
   /* draw menus */
@@ -713,8 +707,10 @@ static void state_main_hook(void)
     /* execute a scheduled reset */
     if (gz.reset_flag) {
       gz.reset_flag = 0;
-      gz.lag_vi_offset += (int32_t)__osViIntrCount - gz.frame_counter;
       gz.frame_counter = 0;
+      gz.lag_vi_offset += gz.vi_counter - gz.frame_counter;
+      // TODO: is it possible to time resets?
+      gz.timer_vi_offset = 0;
       cpu_reset();
     }
   }
@@ -754,6 +750,8 @@ static void state_main_hook(void)
     --z64_ctxt.state_frames;
     /* do not execute an ocarina frame */
     gz.frame_flag = 0;
+    /* pause timer (assume no lag when gz is paused) */
+    gz.timer_vi_offset -= z64_file.gameinfo->update_rate;
   }
 }
 
@@ -1084,13 +1082,11 @@ static void init(void)
     gz.vcont_enabled[i] = 0;
     gz_vcont_set(i, 0, NULL);
   }
+  gz.vi_counter = 0;
+  update_vi_counter();
   gz.frame_counter = 0;
-  gz.lag_vi_offset = -(int32_t)__osViIntrCount;
-  gz.cpu_counter = 0;
-  update_cpu_counter();
-  gz.timer_active = 0;
-  gz.timer_counter_offset = -gz.cpu_counter;
-  gz.timer_counter_prev = gz.cpu_counter;
+  gz.lag_vi_offset = -gz.vi_counter;
+  gz.timer_vi_offset = -gz.vi_counter;
   gz.col_view_state = COLVIEW_INACTIVE;
   gz.hit_view_state = HITVIEW_INACTIVE;
   gz.cull_view_state = CULLVIEW_INACTIVE;

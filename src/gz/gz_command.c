@@ -367,7 +367,7 @@ void command_hollview(void)
 void command_resetlag(void)
 {
   gz.frame_counter = 0;
-  gz.lag_vi_offset = -(int32_t)__osViIntrCount;
+  gz.lag_vi_offset = -(int32_t)gz.vi_counter;
 }
 
 void command_togglewatches(void)
@@ -381,25 +381,22 @@ void command_togglewatches(void)
 
 void command_timer(void)
 {
-  gz.timer_active = !gz.timer_active;
+  // TODO
 }
 
 void command_resettimer(void)
 {
-  gz.timer_counter_offset = -gz.cpu_counter;
-  gz.timer_counter_prev = gz.cpu_counter;
+  gz.timer_vi_offset = -gz.vi_counter;
 }
 
 void command_starttimer(void)
 {
-  if (!gz.timer_active)
-    command_timer();
+  // TODO
 }
 
 void command_stoptimer(void)
 {
-  if (gz.timer_active)
-    command_timer();
+  // TODO
 }
 
 void command_reset(void)
