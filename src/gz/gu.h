@@ -29,8 +29,6 @@ typedef union
 
 void guMtxIdent(Mtx *m);
 void guMtxIdentF(MtxF *mf);
-void guPerspectiveF(MtxF *mf, uint16_t *perspNorm, float fovy, float aspect,
-                    float near, float far, float scale);
 void guLookAtF(MtxF *mf,
                float xEye, float yEye, float zEye,
                float xAt, float yAt, float zAt,

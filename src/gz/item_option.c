@@ -148,20 +148,20 @@ static int wheel_draw_proc(struct menu_item *item,
   {
     Mtx m;
     MtxF mf;
-    MtxF mt;
     {
-      guPerspectiveF(&mf, NULL, M_PI / 4.f,
-                     (float)Z64_SCREEN_WIDTH / (float)Z64_SCREEN_HEIGHT,
-                     1.f, 100.f, 1.f);
+      z64_guPerspective(&m, NULL, M_PI / 4.f,
+                        (float)Z64_SCREEN_WIDTH / (float)Z64_SCREEN_HEIGHT,
+                        1.f, 100.f, 1.f);
+      gfx_disp(gsSPMatrix(gfx_data_append(&m, sizeof(m)),
+                          G_MTX_PROJECTION | G_MTX_LOAD));
     }
     {
-      guTranslateF(&mt, 0.f, 0.f, 1.f - (Z64_SCREEN_WIDTH / 32.f * 2.f +
+      guTranslateF(&mf, 0.f, 0.f, 1.f - (Z64_SCREEN_WIDTH / 32.f * 2.f +
                                          data->n_items / M_PI));
-      guMtxCatF(&mt, &mf, &mf);
+      guMtxF2L(&mf, &m);
+      gfx_disp(gsSPMatrix(gfx_data_append(&m, sizeof(m)),
+                          G_MTX_PROJECTION | G_MTX_MUL));
     }
-    guMtxF2L(&mf, &m);
-    gfx_disp(gsSPMatrix(gfx_data_append(&m, sizeof(m)),
-                        G_MTX_PROJECTION | G_MTX_LOAD));
   }
   /* draw items */
   animate_wheel(data, 1.f / 3.f);

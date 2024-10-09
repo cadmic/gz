@@ -227,9 +227,7 @@ void gz_free_view(void)
 
   if (m_persp != NULL) {
     const float aspect = (float)Z64_SCREEN_WIDTH / (float)Z64_SCREEN_HEIGHT;
-    MtxF mf_persp;
-    guPerspectiveF(&mf_persp, NULL, M_PI / 3.f, aspect, 10.f, 12800.f, 1.f);
-    guMtxF2L(&mf_persp, m_persp);
+    z64_guPerspective(m_persp, NULL, M_PI / 3.f, aspect, 10.f, 12800.f, 1.f);
   }
 
   if (m_lookat != NULL) {

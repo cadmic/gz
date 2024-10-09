@@ -2390,5 +2390,11 @@ uint32_t  z64_LoadOverlay             (uint32_t vrom_start, uint32_t vrom_end,
                                        uint32_t vram_start, uint32_t vram_end,
                                        void *dst);
 void      z64_SeedRandom              (uint32_t seed);
+void      z64_guPerspectiveF          (MtxF *mf, uint16_t *perspNorm,
+                                       float fovy, float aspect, float near,
+                                       float far, float scale);
+void      z64_guPerspective           (Mtx *m, uint16_t *perspNorm,
+                                       float fovy, float aspect, float near,
+                                       float far, float scale);
 
 #endif

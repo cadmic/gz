@@ -19,37 +19,6 @@ void guMtxIdentF(MtxF *mf)
                         0.f, 0.f, 0.f, 1.f);
 }
 
-void guPerspectiveF(MtxF *mf, uint16_t *perspNorm, float fovy, float aspect,
-                    float near, float far, float scale)
-{
-  float cot = cos(fovy / 2.f) / sin(fovy / 2.f);
-  mf->xx = cot / aspect * scale;
-  mf->xy = 0.f;
-  mf->xz = 0.f;
-  mf->xw = 0.f;
-  mf->yx = 0.f;
-  mf->yy = cot * scale;
-  mf->yz = 0.f;
-  mf->yw = 0.f;
-  mf->zx = 0.f;
-  mf->zy = 0.f;
-  mf->zz = (near + far) / (near - far) * scale;
-  mf->zw = -1.f * scale;
-  mf->wx = 0.f;
-  mf->wy = 0.f;
-  mf->wz = 2.f * near * far / (near - far) * scale;
-  mf->ww = 0.f;
-
-  if (perspNorm) {
-    float n = 65536.f * 2.f / (near + far);
-    if (n > 65535.f)
-      n = 65535.f;
-    else if (n < 1.f)
-      n = 1.f;
-    *perspNorm = n;
-  }
-}
-
 void guLookAtF(MtxF *mf,
                float xEye, float yEye, float zEye,
                float xAt, float yAt, float zAt,

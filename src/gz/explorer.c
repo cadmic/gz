@@ -357,9 +357,17 @@ static int draw_proc(struct menu_item *item,
       Mtx m;
       MtxF mf;
       MtxF mt;
-      guPerspectiveF(&mf, NULL, atanf(2.f),
-                     (float)Z64_SCREEN_WIDTH / (float)Z64_SCREEN_HEIGHT,
-                     50.f, 5000.f, 1.f);
+      z64_guPerspective(&m, NULL, atanf(2.f),
+                        (float)Z64_SCREEN_WIDTH / (float)Z64_SCREEN_HEIGHT,
+                        50.f, 5000.f, 1.f);
+      gSPMatrix(data->gfx.poly_opa.p++,
+                gDisplayListData(&data->gfx.poly_opa.d, m),
+                G_MTX_PROJECTION | G_MTX_LOAD);
+      gSPMatrix(data->gfx.poly_xlu.p++,
+                gDisplayListData(&data->gfx.poly_xlu.d, m),
+                G_MTX_PROJECTION | G_MTX_LOAD);
+
+      guMtxIdentF(&mf);
       {
         guScaleF(&mt, data->scale, data->scale, data->scale);
         guMtxCatF(&mt, &mf, &mf);
@@ -383,10 +391,10 @@ static int draw_proc(struct menu_item *item,
       guMtxF2L(&mf, &m);
       gSPMatrix(data->gfx.poly_opa.p++,
                 gDisplayListData(&data->gfx.poly_opa.d, m),
-                G_MTX_PROJECTION | G_MTX_LOAD);
+                G_MTX_PROJECTION | G_MTX_MUL);
       gSPMatrix(data->gfx.poly_xlu.p++,
                 gDisplayListData(&data->gfx.poly_xlu.d, m),
-                G_MTX_PROJECTION | G_MTX_LOAD);
+                G_MTX_PROJECTION | G_MTX_MUL);
     }
     /* create modelview matrix */
     {
