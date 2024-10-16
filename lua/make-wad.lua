@@ -134,15 +134,15 @@ else
   gzinject_cmd = gzinject_cmd .. " -r 3"
 end
 if not opt_nohb and vc_version ~= nil then
-  gzinject_cmd = gzinject_cmd ..  " -p \"gzi/hb_" .. vc_version ..
+  gzinject_cmd = gzinject_cmd ..  " -p \"gzi/homeboy/hb_" .. vc_version ..
                  ".gzi\" --dol-inject \"homeboy/bin/hb-" ..
                  vc_version .. "/homeboy.bin\" --dol-loading 80300000"
 end
 if not opt_disable_controller_remappings then
   if opt_raphnet then
-    gzinject_cmd = gzinject_cmd .. " -p \"gzi/gz_remap_raphnet_wii.gzi\""
+    gzinject_cmd = gzinject_cmd .. " -p \"gzi/controller/gz_remap_raphnet_wii.gzi\""
   else
-    gzinject_cmd = gzinject_cmd .. " -p \"gzi/gz_remap_default_wii.gzi\""
+    gzinject_cmd = gzinject_cmd .. " -p \"gzi/controller/gz_remap_default_wii.gzi\""
   end
 end
 if opt_out ~= nil then
