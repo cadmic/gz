@@ -140,15 +140,15 @@ else
   gzinject_cmd = gzinject_cmd .. " -t " .. rom_info.gz_name
 end
 gzinject_cmd = gzinject_cmd ..
-               " -p \"gzi/hb_" .. gc_version.game_id .. ".gzi\"" ..
+               " -p \"gzi/homeboy/hb_" .. gc_version.game_id .. ".gzi\"" ..
                " --dol-iso-path \"" .. gc_version.dol_path .. "\"" ..
                " --dol-inject \"homeboy/bin/hb-" .. gc_version.game_id .. "/homeboy.bin\"" ..
                " --dol-loading 80300000"
 if not opt_disable_controller_remappings then
   if opt_raphnet then
-    gzinject_cmd = gzinject_cmd .. " -p \"gzi/gz_remap_raphnet_" .. gc_version.game_id .. ".gzi\""
+    gzinject_cmd = gzinject_cmd .. " -p \"gzi/controller/gz_remap_raphnet_" .. gc_version.game_id .. ".gzi\""
   else
-    gzinject_cmd = gzinject_cmd .. " -p \"gzi/gz_remap_default_" .. gc_version.game_id .. ".gzi\""
+    gzinject_cmd = gzinject_cmd .. " -p \"gzi/controller/gz_remap_default_" .. gc_version.game_id .. ".gzi\""
   end
 end
 if opt_out ~= nil then
