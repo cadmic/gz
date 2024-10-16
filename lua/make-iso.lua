@@ -113,7 +113,7 @@ print("building homeboy")
 local make = os.getenv("MAKE")
 if make == nil or make == "" then make = "make" end
 local _,_,make_result = os.execute("(cd homeboy && " .. make ..
-                                   " hb-" .. gc_version.game_id .. ")")
+                                   " hb-" .. gc_version.game_id .. " GAME=OOT)")
 if make_result ~= 0 then error("failed to build homeboy", 0) end
 
 -- remove movie files
