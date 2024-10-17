@@ -107,7 +107,7 @@ if not opt_nohb and vc_version ~= nil then
   local make = os.getenv("MAKE")
   if make == nil or make == "" then make = "make" end
   local _,_,make_result = os.execute("(cd homeboy && " .. make ..
-                                     " hb-" .. vc_version .. " GAME=OOT)")
+                                     " hb-" .. vc_version .. ")")
   if make_result ~= 0 then error("failed to build homeboy", 0) end
 end
 

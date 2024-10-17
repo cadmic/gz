@@ -242,7 +242,7 @@ gc_table = {
                     dol_path      = "zlj_f.tgc/main.dol",
                     rom_path      = "zlj_f.tgc/zlj_f.n64",
                     mq_rom_path   = "zlj_f.tgc/urazlj_f.n64",
-                    movie_paths   = {
+                    trim_paths    = {
                                       "zlj_f.tgc/final_zelda_credits_sound.thp",
                                       "S_Biohazard0.tgc",
                                       "S_Biohazard4.tgc",
@@ -263,7 +263,7 @@ gc_table = {
                     dol_path      = "zlj_f.tgc/main.dol",
                     rom_path      = "zlj_f.tgc/zle_f.n64",
                     mq_rom_path   = "zlj_f.tgc/urazle_f.n64",
-                    movie_paths   = {
+                    trim_paths    = {
                                       "zlj_f.tgc/final_zelda_credits_sound.thp",
                                       "S_1080.tgc",
                                       "S_Clip.tgc",
@@ -278,7 +278,7 @@ gc_table = {
                     game_id       = "PZLJ",
                     dol_path      = "tgc/120903_zelda.tgc/main.dol",
                     rom_path      = "tgc/120903_zelda.tgc/zlj_f.n64",
-                    movie_paths   = {
+                    trim_paths    = {
                                       "tgc/120903_zelda.tgc/final_zelda_credits_sound.thp",
                                       "tgc/120903_zelda.tgc/SIM.elf",
                                       "tgc/retrospec_movie_JP_final02.tgc",
@@ -290,7 +290,7 @@ gc_table = {
                     game_id       = "PZLE",
                     dol_path      = "tgc/zelda_ENG_090903.tgc/main.dol",
                     rom_path      = "tgc/zelda_ENG_090903.tgc/zle_f.n64",
-                    movie_paths   = {
+                    trim_paths    = {
                                       "tgc/zelda_ENG_090903.tgc/us_final_zelda_credits_sound.thp",
                                       "tgc/zelda_ENG_090903.tgc/SIM.elf",
                                       "tgc/retrospec05.tgc",

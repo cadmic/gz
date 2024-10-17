@@ -1,5 +1,5 @@
 function usage()
-  io.stderr:write("usage: make-iso [<gzinject-arg>...] [--skip-movie-files]"
+  io.stderr:write("usage: make-iso [<gzinject-arg>...] [--no-trim]"
                   .. " [-m <input-rom>] [--mq-rom <input-rom>] [-o <output-iso>] <input-iso>\n")
   os.exit(1)
 end
@@ -11,7 +11,7 @@ local opt_title
 local opt_directory = "isoextract"
 local opt_raphnet
 local opt_disable_controller_remappings
-local opt_keep_movies
+local opt_no_trim
 local opt_rom
 local opt_mq_rom
 local opt_out
@@ -38,8 +38,8 @@ while arg[1] do
   elseif arg[1] == "--disable-controller-remappings" then
     opt_disable_controller_remappings = true
     table.remove(arg, 1)
-  elseif arg[1] == "--keep-movies" then
-    opt_keep_movies = true
+  elseif arg[1] == "--no-trim" then
+    opt_no_trim = true
     table.remove(arg, 1)
   elseif arg[1] == "-m" then
     opt_rom = arg[2]
@@ -113,14 +113,14 @@ print("building homeboy")
 local make = os.getenv("MAKE")
 if make == nil or make == "" then make = "make" end
 local _,_,make_result = os.execute("(cd homeboy && " .. make ..
-                                   " hb-" .. gc_version.game_id .. " GAME=OOT)")
+                                   " hb-" .. gc_version.game_id .. ")")
 if make_result ~= 0 then error("failed to build homeboy", 0) end
 
--- remove movie files
-if not opt_keep_movies then
-  for _, movie_path in ipairs(gc_version.movie_paths) do
-    print("removing " .. movie_path)
-    gru.os_rm(opt_directory .. "/" .. movie_path)
+-- trim unnecessary files to save space
+if not opt_no_trim then
+  for _, trim_path in ipairs(gc_version.trim_paths) do
+    print("removing " .. trim_path)
+    gru.os_rm(opt_directory .. "/" .. trim_path)
   end
 end
 
